@@ -18,11 +18,7 @@
       padding: 10px 20px;
       color: white;
     }
-    nav.left {
-      display: flex;
-      gap: 15px;
-    }
-    nav.right {
+    nav.left, nav.right {
       display: flex;
       gap: 15px;
     }
@@ -32,45 +28,26 @@
       font-weight: bold;
       transition: color 0.3s;
     }
-    nav a:hover {
-      color: #ffeb3b;
-    }
+    nav a:hover { color: #ffeb3b; }
     .welcome {
       text-align: center;
       margin-top: 50px;
       font-size: 2em;
       font-weight: bold;
     }
-    /* Loading overlay */
     #loadingOverlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.5em;
-      z-index: 999;
-      display: none;
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.6); color:white;
+      display:flex; justify-content:center; align-items:center;
+      font-size:1.5em; z-index:999; display:none;
     }
-    /* Back button */
     #backBtn {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: #ff5722;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
+      position: fixed; bottom:20px; left:20px;
+      background:#ff5722; color:white; border:none;
+      padding:10px 15px; border-radius:5px; cursor:pointer;
       font-weight: bold;
     }
-    #backBtn:hover {
-      background: #e64a19;
-    }
+    #backBtn:hover { background:#e64a19; }
   </style>
 </head>
 <body>
@@ -82,6 +59,7 @@
     <nav class="right">
       <a href="index.html" class="nav-link">Login</a>
       <a href="register.html" class="nav-link">Register</a>
+      <a href="#" id="logoutLink">Logout</a>
     </nav>
   </header>
 
@@ -89,35 +67,43 @@
     Welcome to Your File Sharing App 🎉
   </div>
 
-  <!-- Loading overlay -->
   <div id="loadingOverlay">Loading...</div>
-
-  <!-- Back button -->
   <button id="backBtn">⬅ Back</button>
+  <button id="logoutBtn">Logout</button>
 
-  <script>
-    const overlay = document.getElementById('loadingOverlay');
-    const links = document.querySelectorAll('.nav-link');
-    const backBtn = document.getElementById('backBtn');
+ <script>
+  const overlay = document.getElementById('loadingOverlay');
+  const links = document.querySelectorAll('.nav-link');
+  const backBtn = document.getElementById('backBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
 
-    // Show loading overlay before navigating
-    links.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        overlay.style.display = 'flex';
-        setTimeout(() => {
-          window.location.href = link.getAttribute('href');
-        }, 1000); // 1 second loading effect
-      });
-    });
-
-    // Back button functionality
-    backBtn.addEventListener('click', () => {
+  // Navigation links with loading overlay
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
       overlay.style.display = 'flex';
-      setTimeout(() => {
-        window.history.back();
-      }, 1000);
+      setTimeout(() => window.location.href = link.href, 1000);
     });
-  </script>
+  });
+
+  // Back button
+  backBtn.addEventListener('click', () => {
+    overlay.style.display = 'flex';
+    setTimeout(() => window.history.back(), 1000);
+  });
+
+  // Show logout only if logged in
+  if (localStorage.getItem('token')) logoutBtn.style.display = 'block';
+
+  // Logout functionality with alert
+  logoutBtn.addEventListener('click', () => {
+    overlay.style.display = 'flex';
+    setTimeout(() => {
+      localStorage.removeItem('token');
+      alert("You are Logged out successfully");
+      window.location.href = 'home.html';
+    }, 1000);
+  });
+</script>
 </body>
 </html>
