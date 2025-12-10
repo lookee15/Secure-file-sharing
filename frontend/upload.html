@@ -1,15 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Upload File</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body { margin:0; font-family:Arial; background:linear-gradient(135deg,#a1c4fd 0%,#c2e9fb 100%); }
+    header { display:flex; justify-content:space-between; background:#4a90e2; padding:10px 20px; color:white; }
+    nav.left, nav.right { display:flex; gap:15px; }
+    nav a { color:white; text-decoration:none; font-weight:bold; }
+    nav a:hover { color:#ffeb3b; }
+    h1 { text-align:center; margin-top:30px; }
+    form { text-align:center; margin-top:20px; }
+    #loadingOverlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); color:white; display:flex; justify-content:center; align-items:center; font-size:1.5em; z-index:999; display:none; }
+    #backBtn { position:fixed; bottom:20px; left:20px; background:#ff5722; color:white; border:none; padding:10px 15px; border-radius:5px; cursor:pointer; }
+    #backBtn:hover { background:#e64a19; }
+  </style>
 </head>
 <body>
-  <h1>Upload File</h1>
+  <header>
+    <nav class="left">
+      <a href="home.html" class="nav-link">Home</a>
+      <a href="my-file.html" class="nav-link">My Files</a>
+    </nav>
+    <nav class="right">
+      <a href="index.html" class="nav-link">Login</a>
+      <a href="register.html" class="nav-link">Register</a>
+    </nav>
+  </header>
+
+  <h1>Upload a File</h1>
   <form id="uploadForm" enctype="multipart/form-data">
-    <input type="file" id="file" name="file" required>
+    <input type="file" name="file" required>
     <button type="submit">Upload</button>
   </form>
-  <script src="js/upload.js"></script>
+
+  <div id="loadingOverlay">Loading...</div>
+  <button id="backBtn">⬅ Back</button>
+
+  <script>
+    const overlay = document.getElementById('loadingOverlay');
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        overlay.style.display = 'flex';
+        setTimeout(() => window.location.href = link.href, 1000);
+      });
+    });
+    document.getElementById('backBtn').addEventListener('click', () => {
+      overlay.style.display = 'flex';
+      setTimeout(() => window.history.back(), 1000);
+    });
+  </script>
 </body>
 </html>

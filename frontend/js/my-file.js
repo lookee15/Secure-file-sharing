@@ -12,9 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const res = await fetch(`${API_URL}/files`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { 'Authorization': `Bearer ${token}` }
       });
 
       const data = await res.json();
@@ -29,11 +27,34 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Render files
       fileList.innerHTML = '';
       data.forEach(file => {
         const li = document.createElement('li');
-        li.textContent = `${file.filename} (${Math.round(file.size / 1024)} KB)`;
+        li.textContent = `${file.filename} (${Math.round(file.size / 1024)} KB) `;
+
+        // Delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', async () => {
+          try {
+            const res = await fetch(`${API_URL}/files/${file._id}`, {
+              method: 'DELETE',
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const result = await res.json();
+            if (!res.ok) {
+              alert(`Delete failed: ${result.error || res.statusText}`);
+            } else {
+              alert('File deleted successfully');
+              loadFiles(); // refresh list
+            }
+          } catch (err) {
+            console.error("Error deleting file:", err);
+            alert("Something went wrong. Check console for details.");
+          }
+        });
+
+        li.appendChild(deleteBtn);
         fileList.appendChild(li);
       });
     } catch (err) {
@@ -42,6 +63,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Load files on page load
   loadFiles();
 });
